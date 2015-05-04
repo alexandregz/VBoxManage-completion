@@ -10,6 +10,16 @@
 #    . ~/.VBoxManage-completion.sh
 #
 
+_VBoxManage_dhcpserver() {
+        local options=(
+                add
+                modify
+                remove
+        )
+
+        COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+}
+
 _VBoxManage_list() {
         local options=(
                 bridgedifs
