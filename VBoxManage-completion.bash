@@ -21,7 +21,7 @@ _VBoxManage_dhcpserver() {
 }
 
 _VBoxManage_list() {
-        local options=(
+        local subcommands=(
                 bridgedifs
                 dhcpservers
                 dvds
@@ -46,7 +46,34 @@ _VBoxManage_list() {
                 webcams
         )
 
-        COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+        local options=(
+                --long
+                -l
+        )
+
+        # only one subcommand
+        for subcom in ${subcommands[*]}; do
+                if [ "$prev" == "$subcom" ]; then
+                        return
+                fi
+        done
+
+
+        # option are optatives
+        exists_option=0
+        for opt in ${options[*]}; do
+                if [ "$prev" == "$opt" ]; then
+                       exists_option=1 
+                fi
+        done
+
+        if [ $exists_option -eq 0 ]; then
+                for opt in ${options[*]}; do
+                        subcommands+=("$opt")
+                done
+        fi
+
+        COMPREPLY=( $( compgen -W "${subcommands[*]}" -- "$cur" ) )
 }
 
 _VBoxManage() {
@@ -94,21 +121,19 @@ _VBoxManage() {
         local cur
         local prev
         local first="${COMP_WORDS[0]}"
+        local second="${COMP_WORDS[1]}"
         _get_comp_words_by_ref -n : cur prev 
 
-        case "$prev" in
-                "$first")
-                        COMPREPLY=( $( compgen -W "${commands[*]}" -- "$cur" ) )
-                        ;;
-                *)
-                        for option in ${commands[*]}; do
-                                if [ "$prev" == "$option" ]; then
-                                        declare -F _VBoxManage_$option >/dev/null || return
-                                        _VBoxManage_$option
-                                fi
-                        done
-                        ;;
-        esac
+        if [ "$prev" == "$first" ]; then
+                COMPREPLY=( $( compgen -W "${commands[*]}" -- "$cur" ) )
+        else
+                for option in ${commands[*]}; do
+                        if [ "$second" == "$option" ]; then
+                                declare -F _VBoxManage_$option >/dev/null || return
+                                _VBoxManage_$option
+                        fi
+                done
+        fi
 
         return
 }
