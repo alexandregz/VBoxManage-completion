@@ -10,6 +10,17 @@
 #    . ~/.VBoxManage-completion.sh
 #
 
+
+_VBoxManage_extpack() {
+        local options=(
+                cleanup
+                install
+                uninstall
+        )
+
+        COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+}
+
 _VBoxManage_dhcpserver() {
         local options=(
                 add
