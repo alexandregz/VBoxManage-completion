@@ -18,6 +18,16 @@ _VBoxManage_extpack() {
                 uninstall
         )
 
+        local cur
+        local prev
+        _get_comp_words_by_ref -n : cur prev
+
+        for opt in ${options[*]}; do
+                if [ "$prev" == "$opt" ]; then
+                        return
+                fi
+        done
+
         COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
 }
 
@@ -27,6 +37,16 @@ _VBoxManage_dhcpserver() {
                 modify
                 remove
         )
+
+        local cur
+        local prev
+        _get_comp_words_by_ref -n : cur prev
+
+        for opt in ${options[*]}; do
+                if [ "$prev" == "$opt" ]; then
+                        return
+                fi
+        done
 
         COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
 }
