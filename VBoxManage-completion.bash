@@ -11,6 +11,30 @@
 #
 
 
+_VBoxManage_metrics() {
+        local options=(
+                collect
+                disable
+                enable
+                list
+                query
+                setup
+        )
+
+        local cur
+        local prev
+        _get_comp_words_by_ref -n : cur prev
+
+        for opt in ${options[*]}; do
+                if [ "$prev" == "$opt" ]; then
+                        return
+                fi
+        done
+
+        COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+}
+
+
 _VBoxManage_extpack() {
         local options=(
                 cleanup
