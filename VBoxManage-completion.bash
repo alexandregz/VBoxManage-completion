@@ -11,6 +11,27 @@
 #
 
 
+_VBoxManage_clonehd() {
+        local options=(
+                --format
+                --variant
+                --existing
+        )
+
+        local cur
+        local prev
+        _get_comp_words_by_ref -n : cur prev
+
+        for opt in ${options[*]}; do
+                if [ "$prev" == "$opt" ]; then
+                        return
+                fi
+        done
+
+        COMPREPLY=( $( compgen -W "${options[*]}" -- "$cur" ) )
+}
+
+
 _VBoxManage_metrics() {
         local options=(
                 collect
